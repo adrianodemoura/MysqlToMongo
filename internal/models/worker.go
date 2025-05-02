@@ -63,7 +63,18 @@ func (w *MigrationWorker) ProcessBatch(ctx context.Context) error {
 
 		// Map pessoa fields
 		p := w.Config.Mapping.Pessoas
-		doc.CPF = converter.ConvertBinaryToString(values[p.CPF-1])
+		// Convert CPF to string and pad with leading zeros
+		cpfStr := converter.ConvertBinaryToString(values[p.CPF-1])
+		if cpfStr != nil {
+			if str, ok := cpfStr.(string); ok {
+				// Pad with leading zeros to ensure 11 digits
+				doc.CPF = fmt.Sprintf("%011s", str)
+			} else {
+				doc.CPF = cpfStr
+			}
+		} else {
+			doc.CPF = nil
+		}
 		doc.Nome = converter.ConvertBinaryToString(values[p.Nome-1])
 		doc.Nasc = converter.ConvertToDatePtr(values[p.Nasc-1])
 		doc.Renda = converter.ConvertToDecimal(values[p.Renda-1])
