@@ -71,12 +71,13 @@ func MigrateData(config *config.Config, mysqlDB *sql.DB, mongoClient *mongo.Clie
 		totalProcessed := 0
 		startTime := time.Now()
 		reportThreshold := config.General.ReportThreshold
+		isFirstReport := true
 
 		for progress := range progressChan {
 			totalProcessed += progress
 
-			// Only report when we've processed another threshold of records
-			if totalProcessed >= reportThreshold {
+			// Always show first report and when we reach the threshold
+			if isFirstReport || totalProcessed >= reportThreshold {
 				elapsed := time.Since(startTime)
 				recordsPerSecond := float64(totalProcessed) / elapsed.Seconds()
 				estimatedTotalTime := time.Duration(float64(totalRecords)/recordsPerSecond) * time.Second
@@ -91,8 +92,17 @@ func MigrateData(config *config.Config, mysqlDB *sql.DB, mongoClient *mongo.Clie
 
 				// Update the threshold for the next report
 				reportThreshold = (totalProcessed/config.General.ReportThreshold + 1) * config.General.ReportThreshold
+				isFirstReport = false
 			}
 		}
+
+		// Show final progress after all processing is done
+		elapsed := time.Since(startTime)
+		recordsPerSecond := float64(totalProcessed) / elapsed.Seconds()
+		log.Printf("Progresso: %d/%d registros (100.00%%) - Tempo total: %v - Velocidade média: %.2f registros/seg",
+			totalProcessed, totalRecords,
+			elapsed.Round(time.Second),
+			recordsPerSecond)
 	}()
 
 	// Aguarda a conclusão
