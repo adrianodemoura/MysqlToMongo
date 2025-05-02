@@ -12,12 +12,6 @@ import (
 
 // Função para criar índices
 func CreateIndexes(ctx context.Context, collection *mongo.Collection) error {
-	// Configuração da collation case-sensitive apenas para o nome
-	nomeCollation := options.Collation{
-		Locale:   "pt",
-		Strength: 3,
-	}
-
 	// Índice único para CPF
 	cpfIndex := mongo.IndexModel{
 		Keys: bson.D{{Key: "cpf", Value: 1}},
@@ -25,11 +19,9 @@ func CreateIndexes(ctx context.Context, collection *mongo.Collection) error {
 			SetUnique(true),
 	}
 
-	// Índice para nome (case-sensitive)
+	// Índice para nome
 	nomeIndex := mongo.IndexModel{
 		Keys: bson.D{{Key: "nome", Value: 1}},
-		Options: options.Index().
-			SetCollation(&nomeCollation),
 	}
 
 	// Índice para emails (dentro do array de contatos)

@@ -22,7 +22,7 @@ func (w *MigrationWorker) ProcessBatch(ctx context.Context) error {
 	collection := w.MongoClient.Database(w.Config.MongoDB.Database).Collection(w.Config.MongoDB.Collection)
 
 	// Query para obter apenas os registros do worker usando LIMIT e OFFSET
-	query := fmt.Sprintf("SELECT * FROM %s LIMIT ? OFFSET ?", w.Config.MySQL.Table)
+	query := fmt.Sprintf("SELECT * FROM (SELECT * FROM %s LIMIT 5000000) as t LIMIT ? OFFSET ?", w.Config.MySQL.Table)
 	rows, err := w.MySQLDB.Query(query, w.EndID-w.StartID+1, w.StartID-1)
 	if err != nil {
 		return fmt.Errorf("erro na consulta MySQL: %v", err)
