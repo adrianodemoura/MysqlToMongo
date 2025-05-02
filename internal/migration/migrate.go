@@ -61,9 +61,9 @@ func MigrateData(config *config.Config, mysqlDB *sql.DB, mongoClient *mongo.Clie
 	log.Printf("Collection '%s' limpa com sucesso!", config.MongoDB.Collection)
 	log.Println("")
 
-	// Obtém o total de registros (limitado a 5 milhões)
+	// Obtém o total de registros
 	var totalRecords int64
-	err = mysqlDB.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM (SELECT * FROM %s LIMIT 5000000) as t", config.MySQL.Table)).Scan(&totalRecords)
+	err = mysqlDB.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %s", config.MySQL.Table)).Scan(&totalRecords)
 	if err != nil {
 		return fmt.Errorf("erro ao contar registros: %v", err)
 	}

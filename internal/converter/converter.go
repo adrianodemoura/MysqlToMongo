@@ -3,11 +3,21 @@ package converter
 import (
 	"encoding/base64"
 	"fmt"
+	"strings"
 	"time"
 	"unicode/utf8"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+// cleanSpecialChars remove caracteres especiais como \r e \n
+func cleanSpecialChars(str string) string {
+	// Remove \r e \n
+	str = strings.ReplaceAll(str, "\r", "")
+	str = strings.ReplaceAll(str, "\n", "")
+	// Remove espaços extras no início e fim
+	return strings.TrimSpace(str)
+}
 
 // ConvertBinaryToString converte dados binários para string e garante UTF-8
 func ConvertBinaryToString(value interface{}) interface{} {
@@ -22,14 +32,14 @@ func ConvertBinaryToString(value interface{}) interface{} {
 		if err == nil {
 			// Verifica se a string é UTF-8 válida
 			if utf8.Valid(decoded) {
-				return string(decoded)
+				return cleanSpecialChars(string(decoded))
 			}
 			// Se não for UTF-8 válida, tenta converter para UTF-8
-			return string(bytes)
+			return cleanSpecialChars(string(bytes))
 		}
 		// Se não for base64, verifica se é UTF-8 válida
 		if utf8.Valid(bytes) {
-			return string(bytes)
+			return cleanSpecialChars(string(bytes))
 		}
 		// Se não for UTF-8 válida, retorna string vazia
 		return ""
@@ -38,7 +48,7 @@ func ConvertBinaryToString(value interface{}) interface{} {
 	// Se for string, verifica se é UTF-8 válida
 	if str, ok := value.(string); ok {
 		if utf8.ValidString(str) {
-			return str
+			return cleanSpecialChars(str)
 		}
 		return ""
 	}
