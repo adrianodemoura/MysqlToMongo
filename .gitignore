@@ -26,3 +26,7 @@ go.work.sum
 
 # Arquivos de configuração com senhas
 config/config.json
+
+# Logs
+tmp/logs/*
+!tmp/logs/.gitkeep
