@@ -23,3 +23,6 @@ go.work.sum
 
 # env file
 .env
+
+# Arquivos de configuração com senhas
+config/config.json

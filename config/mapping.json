@@ -1,0 +1,28 @@
+{
+    "pessoas": {
+        "cpf": 1,
+        "nome": 2,
+        "nasc": 3,
+        "renda": 4,
+        "affinity_score": 5,
+        "affinity_percent": 6,
+        "sexo": 7,
+        "cbo": 8,
+        "mae": 9,
+        "nota": 10,
+        "banco": 11,
+        "cpf_conjuge": 12,
+        "serv_publico": 13,
+        "data_obito": 14,
+        "cidade": 15,
+        "endereco": 16,
+        "bairro": 17,
+        "cep": 18,
+        "uf": 19,
+        "data_atualizacao": 20,
+        "contatos": {
+            "telefones": [21, 22, 23, 24, 25],
+            "emails": [26, 27, 28, 29, 30]
+        }
+    }
+} 

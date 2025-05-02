@@ -1,0 +1,19 @@
+{
+    "mysql": {
+        "host": "localhost",
+        "port": 3306,
+        "user": "user",
+        "password": "senha",
+        "database": "database",
+        "table": "table"
+    },
+    "mongodb": {
+        "uri": "mongodb://user:sernha@localhost:27017/database",
+        "database": "database",
+        "collection": "collection"
+    },
+    "general": {
+        "batch_size": 1000,
+        "num_workers": 5
+    }
+} 
