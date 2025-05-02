@@ -51,7 +51,7 @@ case $CAMPO in
         ;;
     "nome")
         CAMPO_BUSCA="nome"
-        OPERADOR="="
+        OPERADOR="regex"
         ;;
     *)
         echo -e "${RED}Campo inválido. Campos disponíveis: telefone, email, cpf, nome${NC}"
@@ -65,37 +65,56 @@ echo -e "${GREEN}Buscando por $CAMPO: $VALOR${NC}"
 inicio=$(date +%s.%N)
 
 # Executa a busca usando mongosh
-if [ "$OPERADOR" = "\$in" ]; then
-    # Busca em arrays usando $in
-    mongosh "mongodb://contatos_us:contatos_67@localhost:27017/contatos_bd" --quiet --eval "
-    db.pessoas.find(
-        { '$CAMPO_BUSCA': { \$in: ['$VALOR'] } },
-        {
-            cpf: 1,
-            nome: 1,
-            'contatos.telefones': 1,
-            'contatos.emails': 1,
-            data_atualizacao: 1,
-            _id: 0
-        }
-    ).pretty()
-    "
-else
-    # Busca direta para campos não-array
-    mongosh "mongodb://contatos_us:contatos_67@localhost:27017/contatos_bd" --quiet --eval "
-    db.pessoas.find(
-        { '$CAMPO_BUSCA': '$VALOR' },
-        {
-            cpf: 1,
-            nome: 1,
-            'contatos.telefones': 1,
-            'contatos.emails': 1,
-            data_atualizacao: 1,
-            _id: 0
-        }
-    ).pretty()
-    "
-fi
+case $OPERADOR in
+    "\$in")
+        # Busca em arrays usando $in
+        mongosh "mongodb://contatos_us:contatos_67@localhost:27017/contatos_bd" --quiet --eval "
+        db.pessoas.find(
+            { '$CAMPO_BUSCA': { \$in: ['$VALOR'] } },
+            {
+                cpf: 1,
+                nome: 1,
+                'contatos.telefones': 1,
+                'contatos.emails': 1,
+                data_atualizacao: 1,
+                _id: 0
+            }
+        ).pretty()
+        "
+        ;;
+    "regex")
+        # Busca por nome usando regex case-insensitive
+        mongosh "mongodb://contatos_us:contatos_67@localhost:27017/contatos_bd" --quiet --eval "
+        db.pessoas.find(
+            { '$CAMPO_BUSCA': { \$regex: '^$VALOR$', \$options: 'i' } },
+            {
+                cpf: 1,
+                nome: 1,
+                'contatos.telefones': 1,
+                'contatos.emails': 1,
+                data_atualizacao: 1,
+                _id: 0
+            }
+        ).pretty()
+        "
+        ;;
+    *)
+        # Busca direta para campos não-array
+        mongosh "mongodb://contatos_us:contatos_67@localhost:27017/contatos_bd" --quiet --eval "
+        db.pessoas.find(
+            { '$CAMPO_BUSCA': '$VALOR' },
+            {
+                cpf: 1,
+                nome: 1,
+                'contatos.telefones': 1,
+                'contatos.emails': 1,
+                data_atualizacao: 1,
+                _id: 0
+            }
+        ).pretty()
+        "
+        ;;
+esac
 
 # Finaliza o cronômetro e calcula o tempo
 fim=$(date +%s.%N)
