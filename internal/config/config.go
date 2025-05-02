@@ -33,8 +33,9 @@ type MongoDBConfig struct {
 
 // GeneralConfig representa configurações gerais da aplicação
 type GeneralConfig struct {
-	BatchSize  int `json:"batch_size"`
-	NumWorkers int `json:"num_workers"`
+	BatchSize       int `json:"batch_size"`
+	NumWorkers      int `json:"num_workers"`
+	ReportThreshold int `json:"report_threshold"`
 }
 
 // MappingConfig representa o mapeamento das colunas
