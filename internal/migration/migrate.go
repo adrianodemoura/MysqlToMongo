@@ -69,11 +69,29 @@ func MigrateData(config *config.Config, mysqlDB *sql.DB, mongoClient *mongo.Clie
 	// Monitora o progresso
 	go func() {
 		totalProcessed := 0
+		startTime := time.Now()
+		reportThreshold := 1000000 // Report every 1 million records
+
 		for progress := range progressChan {
 			totalProcessed += progress
-			log.Printf("Progresso: %d/%d registros (%.2f%%)",
-				totalProcessed, totalRecords,
-				float64(totalProcessed)/float64(totalRecords)*100)
+
+			// Only report when we've processed another million records
+			if totalProcessed >= reportThreshold {
+				elapsed := time.Since(startTime)
+				recordsPerSecond := float64(totalProcessed) / elapsed.Seconds()
+				estimatedTotalTime := time.Duration(float64(totalRecords)/recordsPerSecond) * time.Second
+				remainingTime := estimatedTotalTime - elapsed
+
+				log.Printf("Progresso: %d/%d registros (%.2f%%) - Tempo decorrido: %v - Velocidade: %.2f registros/seg - Tempo restante estimado: %v",
+					totalProcessed, totalRecords,
+					float64(totalProcessed)/float64(totalRecords)*100,
+					elapsed.Round(time.Second),
+					recordsPerSecond,
+					remainingTime.Round(time.Second))
+
+				// Update the threshold for the next million
+				reportThreshold = (totalProcessed/1000000 + 1) * 1000000
+			}
 		}
 	}()
 
