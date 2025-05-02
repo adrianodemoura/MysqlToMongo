@@ -15,6 +15,12 @@ MysqlToMongo/
 │   ├── database/       # Conexões com bancos de dados
 │   ├── migration/      # Lógica de migração
 │   └── models/         # Estruturas de dados
+├── scripts/            # Scripts utilitários
+│   ├── buscaTelefone.sh    # Script para busca de telefones
+│   ├── corrigirCPFs.sh     # Script para correção de CPFs
+│   └── outros scripts...
+├── tmp/
+│   └── logs/          # Diretório para arquivos de log
 ├── main.go            # Ponto de entrada da aplicação
 └── README.md          # Este arquivo
 ```
@@ -98,7 +104,7 @@ MysqlToMongo/
 - Configurável via `batch_size` no config.json
 
 ### 4. Tratamento de Erros
-- Logs detalhados de erros
+- Logs detalhados de erros (armazenados em `tmp/logs/`)
 - Tratamento de conexões perdidas
 - Validação de dados durante a conversão
 
