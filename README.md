@@ -16,7 +16,7 @@ MysqlToMongo/
 │   ├── migration/      # Lógica de migração
 │   └── models/         # Estruturas de dados
 ├── scripts/            # Scripts utilitários
-│   ├── buscaTelefone.sh        # Script para busca de telefones
+│   ├── buscar.sh               # Script para realizar pesquisas no mongoDB
 │   ├── corrigirCPFs.sh         # Script para correção de CPFs
 │   ├── exportarMainToZip.sh    # Script para exportar branch MAIN para ZIP
 │   └── outros scripts...
@@ -106,11 +106,29 @@ MysqlToMongo/
 
 ### 4. Tratamento de Erros
 - Logs detalhados de erros (armazenados em `tmp/logs/`)
-  - Formato do arquivo: `export_YYYY-MM-DD_HH-MM.log`
   - Logs simultâneos no console e arquivo
   - Timestamp com microsegundos
 - Tratamento de conexões perdidas
 - Validação de dados durante a conversão
+
+### 5. Scripts Utilitários
+- `scripts/buscar.sh`: Realiza buscas no MongoDB por diferentes campos
+  ```bash
+  # Busca por telefone
+  ./scripts/buscar.sh telefone 31996320718
+
+  # Busca por CPF
+  ./scripts/buscar.sh cpf 12345678900
+
+  # Busca por email
+  ./scripts/buscar.sh email joao@email.com
+
+  # Busca por nome
+  ./scripts/buscar.sh nome "João Silva"
+  ```
+
+- `scripts/corrigirCPFs.sh`: Corrige CPFs adicionando zeros à esquerda
+- `scripts/exportarMainToZip.sh`: Exporta a branch MAIN para arquivo ZIP
 
 ## Como Usar
 
@@ -119,6 +137,7 @@ MysqlToMongo/
 ```bash
 go run main.go
 ```
+* o Log será criado em `tmp/logs/` no formato `export_YYYY-MM-DD_HH-MM.log`
 
 ## Estrutura do Código
 
