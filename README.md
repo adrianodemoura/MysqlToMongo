@@ -16,8 +16,9 @@ MysqlToMongo/
 │   ├── migration/      # Lógica de migração
 │   └── models/         # Estruturas de dados
 ├── scripts/            # Scripts utilitários
-│   ├── buscaTelefone.sh    # Script para busca de telefones
-│   ├── corrigirCPFs.sh     # Script para correção de CPFs
+│   ├── buscaTelefone.sh        # Script para busca de telefones
+│   ├── corrigirCPFs.sh         # Script para correção de CPFs
+│   ├── exportarMainToZip.sh    # Script para exportar branch MAIN para ZIP
 │   └── outros scripts...
 ├── tmp/
 │   └── logs/          # Diretório para arquivos de log
