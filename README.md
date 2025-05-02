@@ -1,6 +1,6 @@
 # MySQL to MongoDB Migration Tool
 
-Este é um script em Go para migrar dados de uma tabela MySQL para uma coleção MongoDB, com suporte a processamento paralelo e conversão automática de tipos de dados.
+Este é um script em Go para migrar dados de uma tabela MariaDB para uma coleção MongoDB, com suporte a processamento paralelo e conversão automática de tipos de dados.
 
 ## Estrutura do Projeto
 
@@ -106,6 +106,9 @@ MysqlToMongo/
 
 ### 4. Tratamento de Erros
 - Logs detalhados de erros (armazenados em `tmp/logs/`)
+  - Formato do arquivo: `export_YYYY-MM-DD_HH-MM.log`
+  - Logs simultâneos no console e arquivo
+  - Timestamp com microsegundos
 - Tratamento de conexões perdidas
 - Validação de dados durante a conversão
 
@@ -146,13 +149,13 @@ go run main.go
 ## Requisitos
 
 - Go 1.16 ou superior
-- MySQL 5.7 ou superior
+- MariaDB 10.5 ou superior
 - MongoDB 4.4 ou superior
 
 ## Dependências
 
 - `go.mongodb.org/mongo-driver/mongo` - Driver MongoDB
-- `github.com/go-sql-driver/mysql` - Driver MySQL
+- `github.com/go-sql-driver/mysql` - Driver MariaDB (compatível com MariaDB)
 
 ## Segurança
 

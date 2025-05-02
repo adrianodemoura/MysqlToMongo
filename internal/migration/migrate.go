@@ -4,7 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"io"
 	"log"
+	"os"
+	"path/filepath"
 	"sync"
 	"time"
 
@@ -14,22 +17,53 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// setupLogging configura o log para arquivo e console
+func setupLogging() (*os.File, error) {
+	// Cria o diretório de logs se não existir
+	if err := os.MkdirAll("tmp/logs", 0755); err != nil {
+		return nil, fmt.Errorf("erro ao criar diretório de logs: %v", err)
+	}
+
+	// Gera o nome do arquivo com timestamp
+	timestamp := time.Now().Format("2006-01-02_15-04")
+	logFile := filepath.Join("tmp", "logs", fmt.Sprintf("export_%s.log", timestamp))
+
+	// Abre o arquivo de log
+	file, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao abrir arquivo de log: %v", err)
+	}
+
+	// Configura o log para escrever tanto no arquivo quanto no console
+	log.SetOutput(io.MultiWriter(os.Stdout, file))
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
+
+	return file, nil
+}
+
 // MigrateData executa o processo de migração dos dados
 func MigrateData(config *config.Config, mysqlDB *sql.DB, mongoClient *mongo.Client) error {
+	// Configura o logging
+	logFile, err := setupLogging()
+	if err != nil {
+		return fmt.Errorf("erro ao configurar logging: %v", err)
+	}
+	defer logFile.Close()
+
 	ctx := context.Background()
 	collection := mongoClient.Database(config.MongoDB.Database).Collection(config.MongoDB.Collection)
 
 	// Limpa a collection antes de começar
-	log.Println("Limpando collection existente...")
+	log.Printf("Limpando collection '%s' existente...", config.MongoDB.Collection)
 	if err := collection.Drop(ctx); err != nil {
 		return fmt.Errorf("erro ao limpar collection: %v", err)
 	}
-	log.Println("Collection limpa com sucesso!")
+	log.Printf("Collection '%s' limpa com sucesso!", config.MongoDB.Collection)
 	log.Println("")
 
 	// Obtém o total de registros
 	var totalRecords int64
-	err := mysqlDB.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %s", config.MySQL.Table)).Scan(&totalRecords)
+	err = mysqlDB.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %s", config.MySQL.Table)).Scan(&totalRecords)
 	if err != nil {
 		return fmt.Errorf("erro ao contar registros: %v", err)
 	}
