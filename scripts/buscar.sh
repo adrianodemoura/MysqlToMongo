@@ -10,9 +10,23 @@ NC='\033[0m' # No Color
 tempo_decorrido() {
     local inicio=$1
     local fim=$2
-    # Usa bc para calcular a diferença em milissegundos
-    local tempo_ms=$(echo "scale=3; ($fim - $inicio) * 1000" | bc)
-    echo "Tempo de execução: ${tempo_ms} milissegundos"
+    # Calcula a diferença em segundos
+    local tempo_total=$(echo "$fim - $inicio" | bc)
+    
+    # Calcula horas, minutos, segundos e milissegundos
+    local horas=$(echo "scale=0; $tempo_total / 3600" | bc)
+    local minutos=$(echo "scale=0; ($tempo_total % 3600) / 60" | bc)
+    local segundos=$(echo "scale=0; $tempo_total % 60" | bc)
+    local milissegundos=$(echo "scale=0; ($tempo_total * 1000) % 1000" | bc)
+    
+    # Converte para inteiros para o printf
+    horas=${horas%.*}
+    minutos=${minutos%.*}
+    segundos=${segundos%.*}
+    milissegundos=${milissegundos%.*}
+    
+    # Formata a saída
+    printf "Tempo de execução: %02d:%02d:%02d.%03d\n" "$horas" "$minutos" "$segundos" "$milissegundos"
 }
 
 # Verifica se mongosh está instalado
