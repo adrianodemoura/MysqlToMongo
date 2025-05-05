@@ -93,7 +93,7 @@ case $OPERADOR in
                 data_atualizacao: {
                     \$dateToString: {
                         date: '\$data_atualizacao',
-                        format: '%Y-%m-%dT%H:%M:%S.%L',
+                        format: '%d/%m/%Y %H:%M:%S',
                         timezone: 'America/Sao_Paulo'
                     }
                 },
@@ -115,7 +115,7 @@ case $OPERADOR in
                 data_atualizacao: {
                     \$dateToString: {
                         date: '\$data_atualizacao',
-                        format: '%Y-%m-%dT%H:%M:%S.%L',
+                        format: '%d/%m/%Y %H:%M:%S',
                         timezone: 'America/Sao_Paulo'
                     }
                 },
@@ -137,7 +137,7 @@ case $OPERADOR in
                 data_atualizacao: {
                     \$dateToString: {
                         date: '\$data_atualizacao',
-                        format: '%Y-%m-%dT%H:%M:%S.%L',
+                        format: '%d/%m/%Y %H:%M:%S',
                         timezone: 'America/Sao_Paulo'
                     }
                 },
