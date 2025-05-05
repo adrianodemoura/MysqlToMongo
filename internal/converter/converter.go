@@ -64,7 +64,10 @@ func ConvertToTimePtr(value interface{}) interface{} {
 
 	// Se já for *time.Time, retorna direto
 	if t, ok := value.(*time.Time); ok {
-		return t
+		// Converte para o fuso horário de São Paulo
+		loc, _ := time.LoadLocation("America/Sao_Paulo")
+		tSP := t.In(loc)
+		return &tSP
 	}
 
 	str := ConvertBinaryToString(value)
@@ -88,7 +91,10 @@ func ConvertToTimePtr(value interface{}) interface{} {
 		}
 		for _, format := range formats {
 			if t, err := time.Parse(format, strValue); err == nil {
-				return &t
+				// Converte para o fuso horário de São Paulo
+				loc, _ := time.LoadLocation("America/Sao_Paulo")
+				tSP := t.In(loc)
+				return &tSP
 			}
 		}
 	}

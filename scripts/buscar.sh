@@ -90,7 +90,13 @@ case $OPERADOR in
                 nome: 1,
                 'contatos.telefones': 1,
                 'contatos.emails': 1,
-                data_atualizacao: 1,
+                data_atualizacao: {
+                    \$dateToString: {
+                        date: '\$data_atualizacao',
+                        format: '%Y-%m-%dT%H:%M:%S.%L',
+                        timezone: 'America/Sao_Paulo'
+                    }
+                },
                 _id: 0
             }
         ).pretty()
@@ -106,7 +112,13 @@ case $OPERADOR in
                 nome: 1,
                 'contatos.telefones': 1,
                 'contatos.emails': 1,
-                data_atualizacao: 1,
+                data_atualizacao: {
+                    \$dateToString: {
+                        date: '\$data_atualizacao',
+                        format: '%Y-%m-%dT%H:%M:%S.%L',
+                        timezone: 'America/Sao_Paulo'
+                    }
+                },
                 _id: 0
             }
         ).pretty()
@@ -122,7 +134,13 @@ case $OPERADOR in
                 nome: 1,
                 'contatos.telefones': 1,
                 'contatos.emails': 1,
-                data_atualizacao: 1,
+                data_atualizacao: {
+                    \$dateToString: {
+                        date: '\$data_atualizacao',
+                        format: '%Y-%m-%dT%H:%M:%S.%L',
+                        timezone: 'America/Sao_Paulo'
+                    }
+                },
                 _id: 0
             }
         ).pretty()
